@@ -1,0 +1,2 @@
+# Por si esta carpeta termina dentro de public_html por error: nadie la puede leer desde el navegador.
+Require all denied

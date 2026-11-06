@@ -1,0 +1,6 @@
+# Claves y datos privados: nunca a GitHub
+app/config.php
+app/storage/*
+!app/storage/.htaccess
+.DS_Store
+Thumbs.db
