@@ -19,9 +19,11 @@ $ig = (string) cfg('instagram');
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=1">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
 </head>
 <body>
+<div class="progress" aria-hidden="true"></div>
+<div class="cursor-glow" aria-hidden="true"></div>
 
 <header class="nav" id="top">
   <div class="wrap nav__inner">
@@ -52,19 +54,47 @@ $ig = (string) cfg('instagram');
   <?php endif; ?>
 
   <section class="hero">
+    <canvas class="hero__canvas" aria-hidden="true"></canvas>
     <div class="wrap hero__inner">
-      <div class="hero__text reveal">
-        <p class="eyebrow">Diseño & desarrollo web</p>
-        <h1>Tu presencia online,<br><span>hecha a medida.</span></h1>
-        <p class="lead">Páginas web, tiendas online y software para negocios de cualquier país. Diseño cuidado, código propio y pagos internacionales con tarjeta.</p>
-        <div class="hero__cta">
-          <a href="#servicios" class="btn">Ver servicios</a>
-          <a href="#presupuesto" class="btn btn--ghost">Contame tu proyecto</a>
+      <div class="hero__text">
+        <p class="eyebrow reveal"><span class="pulse-dot"></span>Diseño & desarrollo web</p>
+        <h1 class="reveal">Tu presencia online,<br><span class="typer" data-words="hecha a medida.|que vende.|que trabaja por vos.|lista para el mundo.">hecha a medida.</span></h1>
+        <p class="lead reveal">Páginas web, tiendas online y software para negocios de cualquier país. Diseño cuidado, código propio y pagos internacionales con tarjeta.</p>
+        <div class="hero__cta reveal">
+          <a href="#servicios" class="btn magnetic">Ver servicios</a>
+          <a href="#presupuesto" class="btn btn--ghost magnetic">Contame tu proyecto</a>
         </div>
       </div>
       <div class="hero__art reveal" aria-hidden="true">
-        <img src="assets/img/logo.png" alt="" width="600" height="332">
+        <div class="browser tilt">
+          <div class="browser__bar"><i></i><i></i><i></i><span>bohnwebdesign.com.ar</span></div>
+          <pre class="browser__code"><code class="code-typer"></code><b class="caret"></b></pre>
+          <div class="browser__preview">
+            <img src="assets/img/monogram.png" alt="" width="120" height="75">
+            <div class="skeleton"><span></span><span></span><span class="short"></span></div>
+          </div>
+        </div>
+        <div class="float-chip chip--1">⚡ Carga ultrarrápida</div>
+        <div class="float-chip chip--2">🔒 SSL + pagos seguros</div>
+        <div class="float-chip chip--3">🌎 Cobros desde cualquier país</div>
       </div>
+    </div>
+    <a href="#servicios" class="scroll-hint" aria-label="Bajar"><span></span></a>
+  </section>
+
+  <div class="marquee" aria-label="Tecnologías que uso">
+    <div class="marquee__track">
+      <?php $tech = ['PHP', 'JavaScript', 'HTML5', 'CSS3', 'MySQL', 'Responsive', 'SEO', 'dLocal Go', 'SSL', 'APIs', 'Hostinger', 'UX/UI'];
+      for ($i = 0; $i < 2; $i++): foreach ($tech as $t): ?><span><?= e($t) ?></span><?php endforeach; endfor; ?>
+    </div>
+  </div>
+
+  <section class="stats">
+    <div class="wrap stats__grid">
+      <div class="stat reveal"><strong data-count="100" data-suffix="%">0</strong><span>código propio, sin plantillas</span></div>
+      <div class="stat reveal"><strong data-count="48" data-suffix=" h">0</strong><span>para recibir tu presupuesto</span></div>
+      <div class="stat reveal"><strong data-count="24" data-suffix="/7">0</strong><span>cobros online con tarjeta</span></div>
+      <div class="stat reveal"><strong data-count="4" data-suffix="">0</strong><span>servicios para crecer</span></div>
     </div>
   </section>
 
@@ -78,7 +108,7 @@ $ig = (string) cfg('instagram');
 
       <div class="cards">
         <?php foreach ($PRODUCTS as $id => $p): ?>
-          <article class="card reveal<?= !empty($p['featured']) ? ' card--featured' : '' ?>">
+          <article class="card tilt spot reveal<?= !empty($p['featured']) ? ' card--featured' : '' ?>">
             <?php if (!empty($p['featured'])): ?><span class="card__badge">Más pedido</span><?php endif; ?>
             <h3><?= e($p['name']) ?></h3>
             <p class="card__tagline"><?= e($p['tagline']) ?></p>
@@ -117,18 +147,21 @@ $ig = (string) cfg('instagram');
     </div>
   </section>
 
-  <section class="section section--tint" id="proceso">
+  <section class="section section--dark" id="proceso">
     <div class="wrap">
       <header class="section__head reveal">
         <p class="eyebrow">Cómo trabajo</p>
         <h2>Simple, claro y por etapas</h2>
       </header>
+      <div class="steps-wrap">
+      <div class="steps__line" aria-hidden="true"><i></i></div>
       <ol class="steps">
         <li class="reveal"><span>01</span><h3>Me contás tu idea</h3><p>Completás el formulario y coordinamos una charla para definir alcance, tiempos y estilo.</p></li>
         <li class="reveal"><span>02</span><h3>Presupuesto y anticipo</h3><p>Recibís un presupuesto detallado y un link de pago. Con el 50% arrancamos.</p></li>
         <li class="reveal"><span>03</span><h3>Diseño y desarrollo</h3><p>Te muestro avances, ajustamos juntos y revisamos la versión final.</p></li>
         <li class="reveal"><span>04</span><h3>Publicación</h3><p>Con el 50% restante publico tu sitio en tu dominio. Si querés, sigo cuidándolo con mantenimiento.</p></li>
       </ol>
+      </div>
 
       <div class="modes reveal">
         <div>
@@ -230,6 +263,6 @@ $ig = (string) cfg('instagram');
   </a>
 <?php endif; ?>
 
-<script src="assets/js/main.js?v=1" defer></script>
+<script src="assets/js/main.js?v=2" defer></script>
 </body>
 </html>
