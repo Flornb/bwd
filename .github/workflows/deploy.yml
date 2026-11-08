@@ -42,6 +42,7 @@ jobs:
           HOST="${S#ftp://}"; HOST="${HOST#ftps://}"; HOST="${HOST%/}"
           echo "server=$HOST" >> "$GITHUB_OUTPUT"
           sudo apt-get install -y -qq lftp > /dev/null
+          echo "PTR: $(dig +short -x "$HOST" 2>/dev/null)"
           # Muestra para qué nombre es el certificado del FTP (útil si FTP_SERVER es una IP)
           timeout 20 openssl s_client -starttls ftp -connect "$HOST:21" </dev/null 2>/dev/null \
             | openssl x509 -noout -subject -ext subjectAltName 2>/dev/null || true
