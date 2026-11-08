@@ -5,7 +5,7 @@
 #
 # Configuración (GitHub > repo > Settings > Secrets and variables > Actions):
 #   Secret:  SSH_PRIVATE_KEY  -> la clave privada generada solo para este deploy
-#   La huella del servidor (SSH_FINGERPRINT) asegura que nos conectamos al Hostinger real.
+#   La huella del servidor (SSH_FINGERPRINT, abajo) asegura que nos conectamos al Hostinger real.
 
 name: Deploy a Hostinger
 
@@ -23,7 +23,7 @@ env:
   SSH_HOST: 147.93.39.25
   SSH_PORT: '65002'
   SSH_USER: u855032084
-  SSH_FINGERPRINT: ${{ vars.SSH_FINGERPRINT }}   # ej: SHA256:xxxx (de hPanel > Acceso SSH)
+  SSH_FINGERPRINT: 'SHA256:p3FlXjYCwJ6+ryEyDfB9mlVQFQKCzNOjK0fC/KlCh/E'   # ED25519, de hPanel > Acceso SSH
   SITE_DIR: domains/bohnwebdesign.com.ar
 
 jobs:
