@@ -1,14 +1,11 @@
-# Deploy automático a Hostinger por FTP.
+# Deploy automático a Hostinger por SSH (rsync).
 # Cada push a main que cambie public_html/ o app/ sube SOLO los archivos modificados.
 # Nunca toca app/config.php ni app/storage/ (tus claves y registros quedan en el servidor).
+# No borra nada en el servidor: solo agrega y actualiza.
 #
 # Configuración (GitHub > repo > Settings > Secrets and variables > Actions):
-#   Secrets:   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
-#   (FTP_SERVER: solo la IP o host, sin "ftp://")
-#   Variables opcionales:
-#     FTP_PUBLIC_DIR  (por defecto: public_html/)  -> la cuenta FTP del dominio arranca
-#     FTP_APP_DIR     (por defecto: app/)             en domains/bohnwebdesign.com.ar/
-#     FTP_PROTOCOL    (por defecto: ftps; usar "ftp" solo si ftps falla)
+#   Secret:  SSH_PRIVATE_KEY  -> la clave privada generada solo para este deploy
+#   La huella del servidor (SSH_FINGERPRINT) asegura que nos conectamos al Hostinger real.
 
 name: Deploy a Hostinger
 
@@ -22,6 +19,13 @@ concurrency:
   group: deploy-hostinger
   cancel-in-progress: false
 
+env:
+  SSH_HOST: 147.93.39.25
+  SSH_PORT: '65002'
+  SSH_USER: u855032084
+  SSH_FINGERPRINT: ${{ vars.SSH_FINGERPRINT }}   # ej: SHA256:xxxx (de hPanel > Acceso SSH)
+  SITE_DIR: domains/bohnwebdesign.com.ar
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,47 +33,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Seguridad: antes de subir nada, confirma que la carpeta public_html existe
-      # en el FTP. Si no, frena (así nunca sube archivos al lugar equivocado).
-      - name: Verificar destino en el servidor
-        id: host
+      - name: Preparar clave y verificar identidad del servidor
         env:
-          S: ${{ secrets.FTP_SERVER }}
-          U: ${{ secrets.FTP_USERNAME }}
-          P: ${{ secrets.FTP_PASSWORD }}
-          PUB: ${{ vars.FTP_PUBLIC_DIR || 'public_html/' }}
+          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          HOST="${S#ftp://}"; HOST="${HOST#ftps://}"; HOST="${HOST%/}"
-          echo "server=$HOST" >> "$GITHUB_OUTPUT"
-          sudo apt-get install -y -qq lftp > /dev/null
-          # Muestra para qué nombre es el certificado del FTP (útil si FTP_SERVER es una IP)
-          timeout 20 openssl s_client -starttls ftp -connect "$HOST:21" </dev/null 2>/dev/null \
-            | openssl x509 -noout -subject -ext subjectAltName 2>/dev/null || true
-          LIST=$(lftp -u "$U,$P" -e "set net:max-retries 2; cls -1 .; bye" "$HOST")
-          echo "$LIST"
-          echo "$LIST" | grep -qx "${PUB%/}/" || { echo "::error::No encontré la carpeta ${PUB} en el FTP. Revisá FTP_PUBLIC_DIR."; exit 1; }
+          [ -n "$KEY" ] || { echo "::error::Falta el secret SSH_PRIVATE_KEY"; exit 1; }
+          [ -n "$SSH_FINGERPRINT" ] || { echo "::error::Falta la variable SSH_FINGERPRINT"; exit 1; }
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" -t ed25519 "$SSH_HOST" 2>/dev/null > /tmp/hostkey
+          GOT=$(ssh-keygen -lf /tmp/hostkey | awk '{print $2}')
+          WANT="${SSH_FINGERPRINT#SHA256:}"
+          if [ "${GOT#SHA256:}" != "$WANT" ]; then
+            echo "::error::La huella del servidor no coincide ($GOT). No se sube nada."; exit 1
+          fi
+          cat /tmp/hostkey >> ~/.ssh/known_hosts
+          echo "Servidor verificado: $GOT"
+
+      - name: Verificar destino
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" -o BatchMode=yes "$SSH_USER@$SSH_HOST" \
+            "test -d $SITE_DIR/public_html && test -d $SITE_DIR/app" \
+            || { echo "::error::No encontré $SITE_DIR/public_html y $SITE_DIR/app en el servidor."; exit 1; }
 
       - name: Subir public_html
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ steps.host.outputs.server }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
-          local-dir: ./public_html/
-          server-dir: ${{ vars.FTP_PUBLIC_DIR || 'public_html/' }}
+        run: |
+          rsync -rlz --checksum --itemize-changes --exclude='.git*' \
+            -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT -o BatchMode=yes" \
+            public_html/ "$SSH_USER@$SSH_HOST:$SITE_DIR/public_html/"
 
       - name: Subir app (sin config ni registros)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ steps.host.outputs.server }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
-          local-dir: ./app/
-          server-dir: ${{ vars.FTP_APP_DIR || 'app/' }}
-          exclude: |
-            **/.git*
-            **/.git*/**
-            config.php
-            storage/**
+        run: |
+          rsync -rlz --checksum --itemize-changes --exclude='.git*' --exclude='/config.php' --exclude='/storage/' \
+            -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT -o BatchMode=yes" \
+            app/ "$SSH_USER@$SSH_HOST:$SITE_DIR/app/"
+
+      - name: Borrar la clave del runner
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
