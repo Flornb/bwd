@@ -19,7 +19,7 @@ $ig = (string) cfg('instagram');
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=3">
+  <link rel="stylesheet" href="assets/css/styles.css?v=4">
 </head>
 <body>
 <div class="progress" aria-hidden="true"></div>
@@ -65,18 +65,59 @@ $ig = (string) cfg('instagram');
           <a href="#presupuesto" class="btn btn--ghost magnetic">Contame tu proyecto</a>
         </div>
       </div>
-      <div class="hero__art reveal" aria-hidden="true">
-        <div class="browser tilt">
-          <div class="browser__bar"><i></i><i></i><i></i><span>bohnwebdesign.com.ar</span></div>
-          <pre class="browser__code"><code class="code-typer"></code><b class="caret"></b></pre>
-          <div class="browser__preview">
-            <img src="assets/img/monogram.png" alt="" width="120" height="75">
-            <div class="skeleton"><span></span><span></span><span class="short"></span></div>
+      <div class="hero__art reveal">
+        <div class="showcase" data-active="0">
+          <div class="laptop tilt" aria-hidden="true">
+            <div class="laptop__screen">
+              <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url">lumenestudio.com</span></div>
+              <div class="screens">
+                <!-- 1. Landing -->
+                <div class="scr scr--landing is-active">
+                  <div class="m-nav"><b>Lumen</b><span></span><span></span><span></span></div>
+                  <div class="m-hero">
+                    <div><small>Estudio de arquitectura</small><strong>Espacios que<br>inspiran.</strong><em>Agendá una visita</em></div>
+                    <div class="m-photo"></div>
+                  </div>
+                  <div class="m-cols"><span></span><span></span><span></span></div>
+                </div>
+                <!-- 2. Tienda -->
+                <div class="scr scr--shop">
+                  <div class="m-nav"><b>Aura</b><span></span><span></span><span class="m-cart">🛒 2</span></div>
+                  <div class="m-grid">
+                    <div class="m-prod"><i class="p1"></i><span>Vela Ámbar</span><b>USD 18</b></div>
+                    <div class="m-prod"><i class="p2"></i><span>Difusor Rosa</span><b>USD 32</b></div>
+                    <div class="m-prod"><i class="p3"></i><span>Set Spa</span><b>USD 45</b></div>
+                  </div>
+                  <div class="m-pay">✓ Pago aprobado · Visa •••• 4242</div>
+                </div>
+                <!-- 3. Software -->
+                <div class="scr scr--app">
+                  <div class="m-side"><b>Nova</b><span class="on"></span><span></span><span></span><span></span></div>
+                  <div class="m-dash">
+                    <div class="m-kpis"><div><small>Ventas hoy</small><b>$ 482k</b></div><div><small>Turnos</small><b>36</b></div><div><small>Clientes</small><b>1.204</b></div></div>
+                    <div class="m-chart"><i style="--h:40%"></i><i style="--h:65%"></i><i style="--h:50%"></i><i style="--h:80%"></i><i style="--h:60%"></i><i style="--h:92%"></i><i style="--h:74%"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="laptop__base"></div>
           </div>
+          <div class="phone" aria-hidden="true">
+            <div class="phone__screen">
+              <div class="pscr is-active"><div class="m-photo"></div><strong>Espacios que inspiran.</strong><em>Agendá una visita</em></div>
+              <div class="pscr"><i class="p2"></i><span>Difusor Rosa</span><b>USD 32</b><em>Comprar</em></div>
+              <div class="pscr"><small>Turnos hoy</small><b class="big">36</b><div class="m-chart"><i style="--h:50%"></i><i style="--h:80%"></i><i style="--h:65%"></i><i style="--h:95%"></i></div></div>
+            </div>
+          </div>
+          <div class="float-chip chip--1" aria-hidden="true">🔒 Pagos seguros</div>
+          <div class="float-chip chip--3" aria-hidden="true">📱 Perfecta en celular</div>
         </div>
-        <div class="float-chip chip--1">⚡ Carga ultrarrápida</div>
-        <div class="float-chip chip--2">🔒 SSL + pagos seguros</div>
-        <div class="float-chip chip--3">🌎 Cobros desde cualquier país</div>
+        <div class="showcase__tabs" role="tablist" aria-label="Ejemplos de trabajos">
+          <button role="tab" aria-selected="true" data-i="0">Página web</button>
+          <button role="tab" aria-selected="false" data-i="1">Tienda online</button>
+          <button role="tab" aria-selected="false" data-i="2">Software</button>
+          <span class="showcase__bar"><i></i></span>
+        </div>
       </div>
     </div>
     <a href="#servicios" class="scroll-hint" aria-label="Bajar"><span></span></a>
@@ -310,6 +351,6 @@ $ig = (string) cfg('instagram');
   </a>
 <?php endif; ?>
 
-<script src="assets/js/main.js?v=2" defer></script>
+<script src="assets/js/main.js?v=3" defer></script>
 </body>
 </html>

@@ -305,3 +305,34 @@ document.documentElement.classList.remove('no-js');
   resize();
   draw();
 })();
+
+// Vitrina de la portada: rota entre Página web, Tienda y Software
+(() => {
+  const show = document.querySelector('.showcase');
+  if (!show) return;
+  const tabs = [...document.querySelectorAll('.showcase__tabs button')];
+  const scr = [...show.querySelectorAll('.scr')];
+  const pscr = [...show.querySelectorAll('.pscr')];
+  const url = show.querySelector('.mini-url');
+  const bar = document.querySelector('.showcase__bar i');
+  const urls = ['lumenestudio.com', 'tiendaaura.com', 'app.novagestion.com'];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DUR = 5000;
+  let i = 0, timer;
+
+  const go = (n) => {
+    i = (n + scr.length) % scr.length;
+    [scr, pscr].forEach((list) => list.forEach((el, k) => el.classList.toggle('is-active', k === i)));
+    tabs.forEach((t, k) => t.setAttribute('aria-selected', String(k === i)));
+    url.style.opacity = 0;
+    setTimeout(() => { url.textContent = urls[i]; url.style.opacity = 1; }, 250);
+    if (bar && !reduce) { bar.classList.remove('run'); void bar.offsetWidth; bar.style.setProperty('--dur', DUR + 'ms'); bar.classList.add('run'); }
+  };
+  const start = () => { if (reduce) return; clearInterval(timer); timer = setInterval(() => go(i + 1), DUR); };
+
+  tabs.forEach((t) => t.addEventListener('click', () => { go(+t.dataset.i); start(); }));
+  show.addEventListener('pointerenter', () => { clearInterval(timer); bar?.classList.remove('run'); });
+  show.addEventListener('pointerleave', () => { go(i); start(); });
+  go(0);
+  start();
+})();
