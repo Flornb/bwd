@@ -4,9 +4,10 @@
 #
 # Configuración (GitHub > repo > Settings > Secrets and variables > Actions):
 #   Secrets:   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
-#   Variables (opcionales, si tu FTP no arranca en la carpeta "home"):
-#     FTP_PUBLIC_DIR  (por defecto: domains/bohnwebdesign.com.ar/public_html/)
-#     FTP_APP_DIR     (por defecto: domains/bohnwebdesign.com.ar/app/)
+#   (FTP_SERVER: solo la IP o host, sin "ftp://")
+#   Variables opcionales:
+#     FTP_PUBLIC_DIR  (por defecto: public_html/)  -> la cuenta FTP del dominio arranca
+#     FTP_APP_DIR     (por defecto: app/)             en domains/bohnwebdesign.com.ar/
 #     FTP_PROTOCOL    (por defecto: ftps; usar "ftp" solo si ftps falla)
 
 name: Deploy a Hostinger
@@ -28,25 +29,42 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Seguridad: antes de subir nada, confirma que la carpeta public_html existe
+      # en el FTP. Si no, frena (así nunca sube archivos al lugar equivocado).
+      - name: Verificar destino en el servidor
+        id: host
+        env:
+          S: ${{ secrets.FTP_SERVER }}
+          U: ${{ secrets.FTP_USERNAME }}
+          P: ${{ secrets.FTP_PASSWORD }}
+          PUB: ${{ vars.FTP_PUBLIC_DIR || 'public_html/' }}
+        run: |
+          HOST="${S#ftp://}"; HOST="${HOST#ftps://}"; HOST="${HOST%/}"
+          echo "server=$HOST" >> "$GITHUB_OUTPUT"
+          sudo apt-get install -y -qq lftp > /dev/null
+          LIST=$(lftp -u "$U,$P" -e "set net:max-retries 2; cls -1 .; bye" "$HOST")
+          echo "$LIST"
+          echo "$LIST" | grep -qx "${PUB%/}/" || { echo "::error::No encontré la carpeta ${PUB} en el FTP. Revisá FTP_PUBLIC_DIR."; exit 1; }
+
       - name: Subir public_html
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ steps.host.outputs.server }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
           local-dir: ./public_html/
-          server-dir: ${{ vars.FTP_PUBLIC_DIR || 'domains/bohnwebdesign.com.ar/public_html/' }}
+          server-dir: ${{ vars.FTP_PUBLIC_DIR || 'public_html/' }}
 
       - name: Subir app (sin config ni registros)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ steps.host.outputs.server }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
           local-dir: ./app/
-          server-dir: ${{ vars.FTP_APP_DIR || 'domains/bohnwebdesign.com.ar/app/' }}
+          server-dir: ${{ vars.FTP_APP_DIR || 'app/' }}
           exclude: |
             **/.git*
             **/.git*/**
