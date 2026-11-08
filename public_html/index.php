@@ -19,7 +19,7 @@ $ig = (string) cfg('instagram');
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+  <link rel="stylesheet" href="assets/css/styles.css?v=3">
 </head>
 <body>
 <div class="progress" aria-hidden="true"></div>
@@ -82,10 +82,36 @@ $ig = (string) cfg('instagram');
     <a href="#servicios" class="scroll-hint" aria-label="Bajar"><span></span></a>
   </section>
 
-  <div class="marquee" aria-label="Tecnologías que uso">
+  <div class="marquee" aria-label="Lo que incluye trabajar conmigo">
     <div class="marquee__track">
-      <?php $tech = ['PHP', 'JavaScript', 'HTML5', 'CSS3', 'MySQL', 'Responsive', 'SEO', 'dLocal Go', 'SSL', 'APIs', 'Hostinger', 'UX/UI'];
-      for ($i = 0; $i < 2; $i++): foreach ($tech as $t): ?><span><?= e($t) ?></span><?php endforeach; endfor; ?>
+      <?php
+      $icon = [
+          'lock'  => '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+          'card'  => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/>',
+          'sync'  => '<path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/>',
+          'star'  => '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
+          'phone' => '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+          'search'=> '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+          'bolt'  => '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+          'globe' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+          'chat'  => '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/>',
+          'shield'=> '<path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+      ];
+      $benefits = [
+          ['card', 'Plataforma de pagos segura'],
+          ['sync', 'Mantenimiento y actualizaciones'],
+          ['shield', 'Seguridad y certificado SSL'],
+          ['star', 'Presencia profesional'],
+          ['phone', 'Se ve perfecto en celulares'],
+          ['search', 'Preparada para Google'],
+          ['bolt', 'Carga rápida'],
+          ['globe', 'Cobros desde cualquier país'],
+          ['chat', 'Soporte personalizado'],
+          ['lock', 'Tu dominio y tus datos son tuyos'],
+      ];
+      for ($i = 0; $i < 2; $i++): foreach ($benefits as [$ic, $label]): ?>
+        <span<?= $i ? ' aria-hidden="true"' : '' ?>><svg viewBox="0 0 24 24" aria-hidden="true"><?= $icon[$ic] ?></svg><?= e($label) ?></span>
+      <?php endforeach; endfor; ?>
     </div>
   </div>
 
@@ -147,6 +173,27 @@ $ig = (string) cfg('instagram');
     </div>
   </section>
 
+  <section class="section build">
+    <div class="wrap">
+      <header class="section__head reveal">
+        <p class="eyebrow">Software web</p>
+        <h2>Lo que tu negocio necesita, en un solo sistema</h2>
+        <p>Desarrollo herramientas a medida que te ahorran tiempo y te dan control. Algunas ideas:</p>
+      </header>
+    </div>
+    <?php $mods = ["Turnos y reservas online", "Gestión de clientes", "Control de stock", "Catálogo online", "Panel de ventas", "Facturación y presupuestos", "Pedidos por WhatsApp", "Área de clientes", "Reportes y métricas", "Formularios a medida", "Inscripciones y cursos", "Multi-sucursal"];
+    foreach ([$mods, array_reverse($mods)] as $row => $list): ?>
+      <div class="build__row<?= $row ? ' build__row--rev' : '' ?>">
+        <div class="build__track">
+          <?php for ($i = 0; $i < 2; $i++): foreach ($list as $m): ?><span<?= $i ? ' aria-hidden="true"' : '' ?>><?= e($m) ?></span><?php endforeach; endfor; ?>
+        </div>
+      </div>
+    <?php endforeach; ?>
+    <div class="wrap build__cta reveal">
+      <a href="#presupuesto" class="btn magnetic" data-product="software-web">Contame qué necesitás automatizar</a>
+    </div>
+  </section>
+
   <section class="section section--dark" id="proceso">
     <div class="wrap">
       <header class="section__head reveal">
@@ -196,7 +243,7 @@ $ig = (string) cfg('instagram');
       <header class="section__head reveal">
         <p class="eyebrow">Presupuesto</p>
         <h2>Contame tu proyecto</h2>
-        <p>Te respondo en menos de 48 horas hábiles con una propuesta.</p>
+        <p><span class="free-badge">Primera consulta sin cargo</span><br>Te respondo en menos de 48 horas hábiles con una propuesta.</p>
       </header>
 
       <form class="form reveal" action="presupuesto.php" method="post" novalidate>

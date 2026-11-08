@@ -343,3 +343,27 @@ main, .footer { position: relative; z-index: 1; }
   .hero__canvas, .cursor-glow { display: none; }
 }
 @media (max-width: 760px) { .hero h1 { min-height: 3.3em; } }
+
+/* v3: cinta de beneficios con íconos */
+.marquee__track { gap: 2.6rem; animation-duration: 45s; }
+.marquee__track span { gap: .6rem; letter-spacing: .02em; text-transform: none; font-size: 1rem; color: var(--ink); }
+.marquee__track span::after { content: "✦"; margin-left: 2rem; }
+.marquee__track svg { width: 22px; height: 22px; fill: none; stroke: var(--rose-deep); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* v3: módulos de software en dos cintas */
+.build { overflow: hidden; }
+.build__row { overflow: hidden; padding: .5rem 0; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.build__track { display: flex; gap: 1rem; width: max-content; animation: marquee 40s linear infinite; }
+.build__row--rev .build__track { animation-direction: reverse; animation-duration: 48s; }
+.build__row:hover .build__track { animation-play-state: paused; }
+.build__track span {
+  padding: .9em 1.5em; border-radius: 14px; background: var(--white); border: 1px solid var(--line);
+  font-weight: 500; white-space: nowrap; transition: transform .25s, background .25s, color .25s, border-color .25s;
+}
+.build__track span:hover { transform: translateY(-4px); background: var(--ink); color: var(--white); border-color: var(--ink); }
+.build__cta { text-align: center; margin-top: 2.5rem; }
+
+.free-badge {
+  display: inline-block; margin-bottom: .6rem; padding: .35em 1em; border-radius: 999px; font-size: .85rem; font-weight: 500;
+  color: var(--rose-deep); background: var(--white); border: 1px solid var(--rose);
+}
