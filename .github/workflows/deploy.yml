@@ -1,0 +1,54 @@
+# Deploy automático a Hostinger por FTP.
+# Cada push a main que cambie public_html/ o app/ sube SOLO los archivos modificados.
+# Nunca toca app/config.php ni app/storage/ (tus claves y registros quedan en el servidor).
+#
+# Configuración (GitHub > repo > Settings > Secrets and variables > Actions):
+#   Secrets:   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+#   Variables (opcionales, si tu FTP no arranca en la carpeta "home"):
+#     FTP_PUBLIC_DIR  (por defecto: domains/bohnwebdesign.com.ar/public_html/)
+#     FTP_APP_DIR     (por defecto: domains/bohnwebdesign.com.ar/app/)
+#     FTP_PROTOCOL    (por defecto: ftps; usar "ftp" solo si ftps falla)
+
+name: Deploy a Hostinger
+
+on:
+  push:
+    branches: [main]
+    paths: ['public_html/**', 'app/**']
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Subir public_html
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./public_html/
+          server-dir: ${{ vars.FTP_PUBLIC_DIR || 'domains/bohnwebdesign.com.ar/public_html/' }}
+
+      - name: Subir app (sin config ni registros)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./app/
+          server-dir: ${{ vars.FTP_APP_DIR || 'domains/bohnwebdesign.com.ar/app/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            config.php
+            storage/**
