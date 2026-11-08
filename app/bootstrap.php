@@ -66,7 +66,7 @@ function store_line(string $file, array $row): void
 function notify_owner(string $subject, string $body, ?string $replyTo = null): void
 {
     $to = (string) cfg('contact_email');
-    if ($to === '' || str_contains($to, 'tudominio')) {
+    if ($to === '') {
         return;
     }
     $headers = [

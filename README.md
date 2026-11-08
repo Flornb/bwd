@@ -37,7 +37,7 @@ Con PHP instalado: `php -S localhost:8000 -t public_html` y abrí http://localho
 
 ## Subir a Hostinger
 
-1. En hPanel creá el sitio y conectá el dominio de nic.ar (en nic.ar delegá los DNS a `ns1.dns-parking.com` y `ns2.dns-parking.com`, o los que te indique Hostinger).
+1. En hPanel creá el sitio para **bohnwebdesign.com.ar** y conectá el dominio de nic.ar (en nic.ar delegá los DNS a `ns1.dns-parking.com` y `ns2.dns-parking.com`, o los que te indique Hostinger).
 2. Con el Administrador de archivos, en `domains/TU-DOMINIO/`:
    - el contenido de `public_html/` va dentro de `public_html/`
    - la carpeta `app/` va al lado de `public_html/` (no adentro)
