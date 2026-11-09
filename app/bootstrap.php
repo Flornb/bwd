@@ -5,6 +5,7 @@ declare(strict_types=1);
 $configFile = __DIR__ . '/config.php';
 $CONFIG = require (is_file($configFile) ? $configFile : __DIR__ . '/config.example.php');
 $PRODUCTS = require __DIR__ . '/products.php';
+$BUSINESS = require __DIR__ . '/business.php';
 
 require __DIR__ . '/DlocalGo.php';
 

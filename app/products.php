@@ -25,6 +25,7 @@ return [
         'name'     => 'Tienda online',
         'tagline'  => 'E-commerce listo para vender',
         'mode'     => 'quote',
+        'from'     => 690,          // precio de referencia "desde" (USD)
         'featured' => true,
         'features' => [
             'Hasta 4 secciones + tienda',
@@ -38,6 +39,7 @@ return [
         'name'     => 'Software web',
         'tagline'  => 'Dashboards y sistemas a medida',
         'mode'     => 'quote',
+        'from'     => 1200,
         'features' => [
             'Relevamiento de tu proceso',
             'Paneles, reportes y usuarios',
@@ -50,6 +52,8 @@ return [
         'name'     => 'Mantenimiento',
         'tagline'  => 'Tu web siempre al día',
         'mode'     => 'quote',
+        'from'     => 35,
+        'from_suffix' => '/mes',
         'plans'    => [
             'mensual' => 'Plan mensual (mínimo 6 meses)',
             'anual'   => 'Plan anual con promo (1 o 2 cuotas)',

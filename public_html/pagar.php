@@ -52,6 +52,7 @@ require __DIR__ . '/../app/views/layout_top.php';
     <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
     <button class="btn btn--block" type="submit">Pagar con tarjeta</button>
   </form>
+  <p class="muted">Al pagar aceptás los <a href="terminos.php">Términos y condiciones</a>.</p>
   <p class="muted">Pago seguro procesado por dLocal Go. Podés pagar con tarjeta o medios locales de tu país.</p>
 <?php endif; ?>
 <?php require __DIR__ . '/../app/views/layout_bottom.php'; ?>

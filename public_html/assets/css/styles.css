@@ -485,3 +485,21 @@ main, .footer { position: relative; z-index: 1; }
   .pscr em { font-size: .4rem; padding: 3px 7px; }
   .m-hero small { font-size: .42rem; }
 }
+
+/* v5: datos legales, precios "desde" y página de términos */
+.card__price .from { display: inline; font: 400 .85rem var(--sans); color: var(--ink-soft); }
+.terms-note { color: var(--ink-soft); font-size: .78rem; }
+.terms-note a { color: var(--rose-deep); }
+.footer__legal { margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: .82rem; color: var(--ink-soft); text-align: center; }
+.footer__legal p { margin: .3rem 0; }
+.footer__legal a { color: var(--ink-soft); }
+.legal { max-width: 780px; margin: 0 auto; padding: 3rem 16px 5rem; }
+.legal h1 { font-size: clamp(2.2rem, 5vw, 3rem); }
+.legal h2 { font-size: 1.7rem; margin-top: 2.4rem; scroll-margin-top: 90px; }
+.legal p, .legal li { color: var(--ink-soft); }
+.legal li { margin-bottom: .4em; }
+.legal .updated { font-size: .9rem; }
+.legal .toc { background: var(--tint); border-radius: var(--radius); padding: 1.2rem 1.5rem; }
+.legal .toc ol { margin: 0; padding-left: 1.2rem; }
+.legal .toc a { color: var(--rose-deep); }
+.form [hidden] { display: none; }

@@ -19,7 +19,7 @@ $ig = (string) cfg('instagram');
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=4">
+  <link rel="stylesheet" href="assets/css/styles.css?v=5">
 </head>
 <body>
 <div class="progress" aria-hidden="true"></div>
@@ -38,6 +38,7 @@ $ig = (string) cfg('instagram');
       <a href="#servicios">Servicios</a>
       <a href="#proceso">Cómo trabajo</a>
       <a href="#pagos">Pagos</a>
+      <a href="terminos.php">Términos</a>
       <a href="#presupuesto" class="btn btn--small">Pedir presupuesto</a>
     </nav>
   </div>
@@ -185,8 +186,12 @@ $ig = (string) cfg('instagram');
                 <strong><?= e(money((float) $p['price'])) ?></strong>
                 <small>pago único · <?= (int) $p['deposit_percent'] ?>% para comenzar</small>
               <?php else: ?>
-                <strong>A presupuesto</strong>
-                <small><?= isset($p['plans']) ? 'planes mensuales y anuales' : 'según alcance del proyecto' ?></small>
+                <?php if (!empty($p['from'])): ?>
+                  <strong><small class="from">desde</small> <?= e(money((float) $p['from'])) ?><?= e($p['from_suffix'] ?? '') ?></strong>
+                <?php else: ?>
+                  <strong>A presupuesto</strong>
+                <?php endif; ?>
+                <small><?= isset($p['plans']) ? 'precio final según plan · mensual o anual' : 'precio final según presupuesto' ?></small>
               <?php endif; ?>
             </div>
 
@@ -201,6 +206,7 @@ $ig = (string) cfg('instagram');
                 <button class="btn btn--block" type="submit">
                   Reservar · <?= e(money((float) $p['price'] * $p['deposit_percent'] / 100)) ?>
                 </button>
+                <small class="terms-note">Al pagar aceptás los <a href="terminos.php">Términos y condiciones</a>.</small>
                 <a href="#presupuesto" class="link" data-product="<?= e($id) ?>">Prefiero consultar antes</a>
               </form>
             <?php else: ?>
@@ -342,6 +348,15 @@ $ig = (string) cfg('instagram');
       <?php if ($ig !== ''): ?><a href="https://instagram.com/<?= e($ig) ?>" target="_blank" rel="noopener">Instagram</a><?php endif; ?>
     </div>
     <p>© <?= date('Y') ?> <?= e(cfg('site_name')) ?></p>
+  </div>
+  <div class="wrap footer__legal">
+    <p>
+      <?= e(cfg('site_name')) ?> es un emprendimiento de <strong><?= e($BUSINESS['legal_name']) ?></strong>
+      · <?= e($BUSINESS['tax_label']) ?> <?= e($BUSINESS['tax_id']) ?> · <?= e($BUSINESS['city']) ?>
+      · <a href="mailto:<?= e(cfg('contact_email')) ?>"><?= e(cfg('contact_email')) ?></a>
+      <?php if ($BUSINESS['phone'] !== ''): ?>· <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $BUSINESS['phone'])) ?>"><?= e($BUSINESS['phone']) ?></a><?php endif; ?>
+    </p>
+    <p><a href="terminos.php">Términos y condiciones</a> · <a href="terminos.php#cancelaciones">Cancelaciones y reembolsos</a> · <a href="terminos.php#privacidad">Privacidad</a></p>
   </div>
 </footer>
 
