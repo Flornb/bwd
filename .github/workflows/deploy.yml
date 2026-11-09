@@ -41,7 +41,12 @@ jobs:
           [ -n "$SSH_FINGERPRINT" ] || { echo "::error::Falta la variable SSH_FINGERPRINT"; exit 1; }
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "$SSH_PORT" -t ed25519 "$SSH_HOST" 2>/dev/null > /tmp/hostkey
+          for t in 1 2 3 4 5; do
+            ssh-keyscan -T 15 -p "$SSH_PORT" -t ed25519 "$SSH_HOST" 2>/dev/null > /tmp/hostkey || true
+            [ -s /tmp/hostkey ] && break
+            echo "Intento $t: el servidor no respondió, reintento..."; sleep $((t * 5))
+          done
+          [ -s /tmp/hostkey ] || { echo "::error::El servidor SSH no respondió. No se sube nada."; exit 1; }
           GOT=$(ssh-keygen -lf /tmp/hostkey | awk '{print $2}')
           WANT="${SSH_FINGERPRINT#SHA256:}"
           if [ "${GOT#SHA256:}" != "$WANT" ]; then
