@@ -8,5 +8,6 @@ return [
     'tax_label'  => 'CUIT',
     'tax_id'     => '27-36447249-3',
     'city'       => 'Córdoba, Argentina',
-    'phone'      => '',   // ej: +54 9 351 000-0000 (vacío = no se muestra)
+    'phone'      => '+54 9 351 331-2257',
+    'whatsapp'   => '5493513312257',   // solo números, con código de país (vacío = sin botón de WhatsApp)
 ];

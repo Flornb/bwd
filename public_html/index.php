@@ -2,7 +2,7 @@
 require __DIR__ . '/../app/bootstrap.php';
 $csrf = csrf_token();
 $status = $_GET['estado'] ?? '';
-$wa = (string) cfg('whatsapp');
+$wa = (string) (cfg('whatsapp') ?: ($BUSINESS['whatsapp'] ?? ''));
 $ig = (string) cfg('instagram');
 ?>
 <!doctype html>
